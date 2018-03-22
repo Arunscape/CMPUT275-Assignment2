@@ -40,7 +40,7 @@ def read_tree(bitreader):
                     symbol = bitreader.readbits(8)
                     tree_part = huffman.TreeBranch(symbol)
                 elif bit == 0:
-                    tree_part = huffman.TreeBranch('None')
+                    tree_part = huffman.TreeLeaf('None')
 
             return tree_part
         except:
