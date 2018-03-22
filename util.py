@@ -30,15 +30,18 @@ def read_tree(bitreader):
     while True:
         try:
             bit = bitreader.readbit()
+            print(bit)
             if bit == 1:
                 left = read_tree(bitreader)
                 right = read_tree(bitreader)
                 tree_part = huffman.TreeBranch(left, right)
             elif bit == 0:
                 bit = bitreader.readbit()
+                print(bit)
                 if bit == 1:
                     symbol = bitreader.readbits(8)
-                    tree_part = huffman.TreeBranch(symbol)
+                    print(chr(symbol))
+                    tree_part = huffman.TreeLeaf(symbol)
                 elif bit == 0:
                     tree_part = huffman.TreeLeaf('None')
 
