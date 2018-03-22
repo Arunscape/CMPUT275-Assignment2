@@ -92,7 +92,21 @@ def write_tree(tree, bitwriter):
       tree: A Huffman tree.
       bitwriter: An instance of bitio.BitWriter to write the tree to.
     '''
-    pass
+    # just for use in comparing classes
+    Leaf_Class = huffman.TreeLeaf(0)
+    Branch_Class = huffman.TreeBranch()
+
+    if tree = Branch_Class:
+        bitwriter.writebit(True)
+        write_tree(tree.left, bitwriter)
+        write_tree(tree.right, bitwriter)
+    elif tree = Leaf_Class:
+        if tree.value == 'None':
+            bitwriter.writebit(False)
+            writer.writebit(False)
+        else:
+            symbol = tree.value
+            bitwriter.writebits(symbol,8)
 
 
 def compress(tree, uncompressed, compressed):
