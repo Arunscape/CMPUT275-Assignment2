@@ -2,8 +2,6 @@
 
 import bitio
 import huffman
-import binary_heap
-
 
 def read_tree(bitreader):
     '''Read a description of a Huffman tree from the given bit reader,
@@ -30,20 +28,17 @@ def read_tree(bitreader):
     while True:
         try:
             bit = bitreader.readbit()
-            print(bit)
             if bit == 1:
                 left = read_tree(bitreader)
                 right = read_tree(bitreader)
                 tree_part = huffman.TreeBranch(left, right)
             elif bit == 0:
                 bit = bitreader.readbit()
-                print(bit)
                 if bit == 1:
                     symbol = bitreader.readbits(8)
-                    print(chr(symbol))
                     tree_part = huffman.TreeLeaf(symbol)
                 elif bit == 0:
-                    tree_part = huffman.TreeLeaf('None')
+                    tree_part = huffman.TreeLeaf(None)
 
             return tree_part
         except:
@@ -92,21 +87,28 @@ def write_tree(tree, bitwriter):
       tree: A Huffman tree.
       bitwriter: An instance of bitio.BitWriter to write the tree to.
     '''
-    # just for use in comparing classes
-    Leaf_Class = huffman.TreeLeaf(0)
-    Branch_Class = huffman.TreeBranch()
 
-    if tree = Branch_Class:
+
+    if type(tree)==type(huffman.TreeBranch(0,0)):
+        print(1)
         bitwriter.writebit(True)
         write_tree(tree.left, bitwriter)
         write_tree(tree.right, bitwriter)
-    elif tree = Leaf_Class:
-        if tree.value == 'None':
+    elif type(tree) == type(huffman.TreeLeaf(0)):
+        if tree.value == None:
             bitwriter.writebit(False)
-            writer.writebit(False)
+            bitwriter.writebit(False)
+            print(0)
+            print(0)
         else:
+            bitwriter.writebit(False)
+            bitwriter.writebit(True)
+            print(0)
+            print(1)
             symbol = tree.value
+            print(symbol)
             bitwriter.writebits(symbol,8)
+
 
 
 def compress(tree, uncompressed, compressed):
