@@ -180,8 +180,9 @@ def compress(tree, uncompressed, compressed):
           and the coded input data.
     '''
 
-    write_tree(tree, compressed)
+    bitwriter = bitio.BitWriter(compressed)
 
+    write_tree(tree, bitwriter)
 
+    
     #flush bitwriter
-    pass
