@@ -58,16 +58,18 @@ def decode_byte(tree, bitreader):
       Next byte of the compressed bit stream.
     """
     #read bits from the bit reader
-
+    #traverse the tree based on bits
     current = tree
 
     while True:
         try:
             bit = bitreader.readbit()
             # print(bit)
-        except EOFError:
-            raise Exception("SOMETHING BROKE")
-            break
+
+        #not needed because if there's an Exception, python will raise it anyways lol
+        # except EOFError:
+        #     raise Exception("SOMETHING BROKE")
+        #     break
 
         if bit:
             #go right
@@ -77,22 +79,14 @@ def decode_byte(tree, bitreader):
             #go left
             # print('going left')
             current = current.left
+
+        #if a leaf is reached, break and return the value of the leaf
         if type(current) == type(huffman.TreeLeaf(0)):
             break
 
+    #return value of leaf
     return current.value
 
-    # #traverse the tree based on bits
-    # while type(tree_part)=="TreeBranch"#not at a leaf:
-    #     if not bit: #bit==0
-    #         pass
-    #         #go left
-    #     elif bit: #bit=1
-    #         pass
-    #     bit = bitreader.bit()
-    #
-    #     if type(tree_part)=="TreeLeaf": #at a leaf
-    #         return tree_part.value
 
 
 
