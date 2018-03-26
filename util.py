@@ -78,7 +78,7 @@ def decode_byte(tree, bitreader):
             # print('going left')
             current = tree.left
         if type(current) == type(huffman.TreeLeaf(0)): break
-    return chr(current.value)
+    return current.value
 
     # #traverse the tree based on bits
     # while type(tree_part)=="TreeBranch"#not at a leaf:
@@ -106,21 +106,23 @@ def decompress(compressed, uncompressed):
           output is written.
 
     '''
-    pass
     #probably definitely wrong but I'm just writing
     #what I'm thinking at to moment to try to make sense of this
+    bitreader = bitio.BitReader(compressed)
+    bitwriter = bitio.BitWriter(uncompressed)
 
     #should be the compressed info from the bitstream I think
-    cmptree = read_tree(compressed)
+    tree = read_tree(bitreader)
 
-    #while
+    decoded = 0
+    # while the end of file is not reached
+    while decoded != None:
     #rest of input stream
-    decoded= decode_byte(tree)
-    #add decoded byte to uncompressed tree
-    #end while
+        decoded = decode_byte(tree, bitreader)
+        bitwriter.writebits(decoded,8)
+    
 
-    #finally, write the tree
-    write_tree(uncompressed)
+
 
 def write_tree(tree, bitwriter):
     '''Write the specified Huffman tree to the given bit writer.  The
