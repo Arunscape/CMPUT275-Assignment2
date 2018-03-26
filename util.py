@@ -61,6 +61,7 @@ def decode_byte(tree, bitreader):
     #read bits from the bit reader
 
     current = tree
+
     while True:
         try:
             bit = bitreader.readbit()
@@ -72,12 +73,14 @@ def decode_byte(tree, bitreader):
         if bit:
             #go right
             # print('going right')
-            current = tree.right
+            current = current.right
         else:
             #go left
             # print('going left')
-            current = tree.left
-        if type(current) == type(huffman.TreeLeaf(0)): break
+            current = current.left
+        if type(current) == type(huffman.TreeLeaf(0)):
+            break
+
     return current.value
 
     # #traverse the tree based on bits
@@ -115,7 +118,7 @@ def decompress(compressed, uncompressed):
     tree = read_tree(bitreader)
 
     decoded = 0
-    
+
     # while the end of file is not reached
     while decoded != None:
     #rest of input stream
