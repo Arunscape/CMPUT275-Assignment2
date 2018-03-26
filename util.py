@@ -58,7 +58,40 @@ def decode_byte(tree, bitreader):
     Returns:
       Next byte of the compressed bit stream.
     """
-    pass
+    #read bits from the bit reader
+
+    current = tree
+    while True:
+        try:
+            bit = bitreader.readbit()
+            # print(bit)
+        except EOFError:
+            raise Exception("SOMETHING BROKE")
+            break
+
+        if bit:
+            #go right
+            # print('going right')
+            current = tree.right
+        else:
+            #go left
+            # print('going left')
+            current = tree.left
+        if type(current) == type(huffman.TreeLeaf(0)): break
+    return chr(current.value)
+
+    # #traverse the tree based on bits
+    # while type(tree_part)=="TreeBranch"#not at a leaf:
+    #     if not bit: #bit==0
+    #         pass
+    #         #go left
+    #     elif bit: #bit=1
+    #         pass
+    #     bit = bitreader.bit()
+    #
+    #     if type(tree_part)=="TreeLeaf": #at a leaf
+    #         return tree_part.value
+
 
 
 def decompress(compressed, uncompressed):
@@ -74,7 +107,20 @@ def decompress(compressed, uncompressed):
 
     '''
     pass
+    #probably definitely wrong but I'm just writing
+    #what I'm thinking at to moment to try to make sense of this
 
+    #should be the compressed info from the bitstream I think
+    cmptree = read_tree(compressed)
+
+    #while
+    #rest of input stream
+    decoded= decode_byte(tree)
+    #add decoded byte to uncompressed tree
+    #end while
+
+    #finally, write the tree
+    write_tree(uncompressed)
 
 def write_tree(tree, bitwriter):
     '''Write the specified Huffman tree to the given bit writer.  The
@@ -90,7 +136,7 @@ def write_tree(tree, bitwriter):
 
 
     if type(tree)==type(huffman.TreeBranch(0,0)):
-        print(1)
+        # print(1)
         bitwriter.writebit(True)
         write_tree(tree.left, bitwriter)
         write_tree(tree.right, bitwriter)
@@ -98,15 +144,16 @@ def write_tree(tree, bitwriter):
         if tree.value == None:
             bitwriter.writebit(False)
             bitwriter.writebit(False)
-            print(0)
-            print(0)
+            # print(0)
+            # print(0)
+
         else:
             bitwriter.writebit(False)
             bitwriter.writebit(True)
-            print(0)
-            print(1)
+            # print(0)
+            # print(1)
             symbol = tree.value
-            print(symbol)
+            # print(symbol)
             bitwriter.writebits(symbol,8)
 
 
@@ -126,4 +173,9 @@ def compress(tree, uncompressed, compressed):
       compressed: A file stream that will receive the tree description
           and the coded input data.
     '''
+
+    write_tree(tree, compressed)
+
+
+    #flush bitwriter
     pass
