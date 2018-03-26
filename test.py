@@ -2,6 +2,7 @@ import bitio
 import huffman
 import util
 
+"""
 with open("simple.txt", 'wb') as file:
     writer = bitio.BitWriter(file)
 
@@ -28,3 +29,9 @@ with open("simple.txt", 'rb') as file:
     reader = bitio.BitReader(file)
     tree = huffman.TreeBranch(huffman.TreeBranch(huffman.TreeLeaf(ord('A')),huffman.TreeLeaf(None)),huffman.TreeLeaf(ord('B')))
     print(util.decode_byte(tree,reader))
+"""
+tree = huffman.TreeBranch(huffman.TreeBranch(huffman.TreeLeaf(ord('A')),huffman.TreeLeaf(None)),huffman.TreeLeaf(ord('B')))
+table = huffman.make_encoding_table(tree)
+encoded = table[65]
+for bit in table[None]:
+    print(bit)

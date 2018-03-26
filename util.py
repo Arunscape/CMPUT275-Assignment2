@@ -120,9 +120,11 @@ def decompress(compressed, uncompressed):
     decoded = 0
 
     # while the end of file is not reached
-    while decoded != None:
+    while True:
     #rest of input stream
         decoded = decode_byte(tree, bitreader)
+        if decoded == None:
+            break
         bitwriter.writebits(decoded,8)
 
 
@@ -181,8 +183,34 @@ def compress(tree, uncompressed, compressed):
     '''
 
     bitwriter = bitio.BitWriter(compressed)
+    bitreader = bitio.BitReader(uncompressed)
+
+    table = huffman.make_encoding_table(tree)
 
     write_tree(tree, bitwriter)
+    bit_count = 0
 
-    
-    #flush bitwriter
+    while True:
+        try:
+            symbol = bitreader.readbits(8)
+        except:
+            break
+
+        encoded = table[symbol]
+
+        for bit in encoded:
+            bit_count += 1
+            bitwriter.writebit(bit)
+
+    #write the end of file message
+    for bit in table[None]:
+        bit_count += 1
+        bitwriter.writebit(bit)
+
+    # pad with zeros if full bytes weren't sent
+    remaining = bit_count % 8
+    if remaining != 0:
+        for i in range(remaining):
+            bitwriter.writebit(False)
+
+    bitwriter.flush()
