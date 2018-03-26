@@ -115,12 +115,13 @@ def decompress(compressed, uncompressed):
     tree = read_tree(bitreader)
 
     decoded = 0
+    
     # while the end of file is not reached
     while decoded != None:
     #rest of input stream
         decoded = decode_byte(tree, bitreader)
         bitwriter.writebits(decoded,8)
-    
+
 
 
 
