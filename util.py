@@ -1,4 +1,7 @@
 # The functions in this file are to be implemented by students.
+# Names:
+# Tamara Bojovic 1511502
+# Arun Woosaree 1514457
 
 import bitio
 import huffman
@@ -24,24 +27,20 @@ def read_tree(bitreader):
       A Huffman tree constructed according to the given description.
     '''
 
-    while True:
-        try:
-            bit = bitreader.readbit()
-            if bit == 1: # branch is indicated by a 1
-                left = read_tree(bitreader)
-                right = read_tree(bitreader)
-                tree_part = huffman.TreeBranch(left, right)
-            elif bit == 0: # leaf is indicated by a 0
-                bit = bitreader.readbit()
-                if bit == 1: # 01 is a 'symbol'
-                    symbol = bitreader.readbits(8)
-                    tree_part = huffman.TreeLeaf(symbol)
-                elif bit == 0: # 00 is the EOF symbol
-                    tree_part = huffman.TreeLeaf(None)
+    bit = bitreader.readbit()
+    if bit == 1: # branch is indicated by a 1
+        left = read_tree(bitreader)
+        right = read_tree(bitreader)
+        tree_part = huffman.TreeBranch(left, right)
+    elif bit == 0: # leaf is indicated by a 0
+        bit = bitreader.readbit()
+        if bit == 1: # 01 is a 'symbol'
+            symbol = bitreader.readbits(8)
+            tree_part = huffman.TreeLeaf(symbol)
+        elif bit == 0: # 00 is the EOF symbol
+            tree_part = huffman.TreeLeaf(None)
 
-            return tree_part
-        except:
-            break
+    return tree_part
 
 
 def decode_byte(tree, bitreader):
@@ -62,32 +61,21 @@ def decode_byte(tree, bitreader):
     current = tree
 
     while True:
-        try:
-            bit = bitreader.readbit()
-            # print(bit)
-
-        #not needed because if there's an Exception, python will raise it anyways lol
-        # except EOFError:
-        #     raise Exception("SOMETHING BROKE")
-        #     break
+        bit = bitreader.readbit()
 
         if bit:
             #go right
-            # print('going right')
             current = current.right
         else:
             #go left
-            # print('going left')
             current = current.left
 
-        #if a leaf is reached, break and return the value of the leaf
+        #if a leaf is reached, stop searching
         if type(current) == type(huffman.TreeLeaf(0)):
             break
 
-    #return value of leaf
+    # return value of leaf
     return current.value
-
-
 
 
 def decompress(compressed, uncompressed):
@@ -147,7 +135,6 @@ def write_tree(tree, bitwriter):
             bitwriter.writebit(True)
             symbol = tree.value
             bitwriter.writebits(symbol,8)
-
 
 
 def compress(tree, uncompressed, compressed):
